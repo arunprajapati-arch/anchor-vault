@@ -98,7 +98,7 @@ pub struct Withdraw <'info>{
     #[account(
         mut,
         seeds = [b"vault", vault_state.key().as_ref()],
-        bump = vault_state.state_bump,
+        bump = vault_state.vault_bump,
     )]
     pub vault: SystemAccount<'info>,
 
@@ -119,14 +119,14 @@ impl<'info> Withdraw<'info>{
             to: self.signer.to_account_info(),
           
         };
-        let pda_signing_seeds = [
+        let seeds = [
             b"vault",
             self.vault_state.to_account_info().key.as_ref(),
             &[self.vault_state.vault_bump]
 
         ];
-        let seeds = [&pda_signing_seeds[..]];
-        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, &seeds);
+        let signer_seeds = &[&seeds[..]];
+        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer_seeds);
 
         transfer(cpi_ctx, amount)?;
         Ok(())
@@ -142,7 +142,7 @@ pub struct CloseVault <'info>{
     #[account(
         mut,
         seeds = [b"vault", vault_state.key().as_ref()],
-        bump = vault_state.state_bump,
+        bump = vault_state.vault_bump,
     )]
     pub vault: SystemAccount<'info>,
 
