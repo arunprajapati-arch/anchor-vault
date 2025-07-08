@@ -33,6 +33,8 @@ describe("anchor-vault", () => {
 
     console.log("\nYour transaction signature", tx);
     console.log("Your Vault info", await provider.connection.getAccountInfo(vault));
+    console.log("Vault info:", await provider.connection.getAccountInfo(vaultState));
+
     
   });
 
@@ -70,7 +72,7 @@ describe("anchor-vault", () => {
 
    it("Close Vault", async() => {
     const tx = await program.methods
-    .closeVault()
+    .close()
     .accountsPartial({
       signer: provider.wallet.publicKey,
       vaultState,
